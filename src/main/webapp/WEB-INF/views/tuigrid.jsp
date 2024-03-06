@@ -71,18 +71,21 @@
 	        	method:"get",
 	        	dataType : "json",
 	        	success: function(rslt){
-	        		console.log("체크",rslt);
 	        		const grid = new tui.Grid({
 	        		      el: document.getElementById("grid"),
 	        		      data: rslt,//여기에 api 넣는것임  url
 	        		      scrollX: true,
 	        		      scrollY: false,
 	        		      minBodyHeight: 30,
-	        		      rowHeaders: [{
-	        		        type: 'num',
+ 	        		      rowHeaders: [{
+	        		        type: 'rowNum',
 	        		        header: "번호",
 	        		        width: 80,
-	        		      }],
+	        		     /*    rowKey : "num",
+	        		       formatter: function(params) {
+	                            return params.value.num;
+	        		        }  */
+	        		      }], 
 	        		      pageOptions: {
 	        		        useClient: true,
 	        		        perPage: 10,
@@ -92,10 +95,25 @@
 	        		      },
 	        		      minRowHeight: 71,
 	        		      columns: [
+	        		         {
+		        		          type: 'checkbox',
+		        		          align: 'center',
+		        		          header: "체크",
+		        		          width: 80,
+		        		          formatter:function(data){
+		        		        	  let html = '<input class="seq" type="checkbox" value='+data.row.num+'>'
+		        		        	  
+		        		        	  return html
+		        		          }
+		        		        }, 
 	        		        {
 	        		          header: '제목',
 	        		          name: 'title',
 	        		          align: 'center',
+	        		          formatter:function(data){
+	        		        	  let html = '<span class="titleNum" data-num="' + data.row.num + '">' + data.row.title + '</span>';
+	        		        	  return html;
+	        		          }
 	        		        },
 	        		        {
 	        		          header: '작성자',
@@ -117,6 +135,71 @@
 	        		        }
 	        		      ],
 	        		    });
+	        			// 체크박스의 id 값을 가져와서 배열에 넣어주기
+	        			let checkboxes = document.querySelectorAll('.seq');
+	        			let checkboxArray = Array.from(checkboxes);
+	        			let values = [];
+	        			
+	        			checkboxes.forEach(checkbox => {
+	        			    let value = checkbox.value;
+	        			    values.push(value);
+	        			});
+	        			
+	        			console.log(values);
+	        			
+	        			
+	        			// 제목에 데이터를 가져와서 id 값 가져오기 
+	        			let titleNum = document.querySelectorAll('.titleNum[data-num]');
+	        			let titleNumArray = Array.from(titleNum);
+	        			
+	        			titleNum.forEach(element => {
+	        			    let dataNumValue = element.getAttribute('data-num');
+							
+							element.addEventListener("click",function(){
+								
+								location.href = "/board/selectOne/"+dataNumValue
+							});
+	        			});
+	        			console.log("제목",tvalues);
+	        			
+	        			
+	        		/* 	checkboxArray.forEach(checkbox => {
+	        			    const value = checkbox.value;
+	        			    console.log(value);
+	        			}) */;
+	        		
+	        		
+	        		 /* grid.on('check', function(ev) {
+	                     var checkedRows = grid.getCheckedRows();
+	                     var nums = checkedRows.map(row => row.num);
+	                     console.log(checkedRows);
+	                     console.log(nums);
+	        		 });
+	                 grid.on("click", function (ev) {
+	                	 var focusedCell = grid.getFocusedCell();
+	                	 var clickedRow = grid.getRow(focusedCell.rowKey);
+	                	 
+	                	 console.log('aa'+focusedCell);
+	                	 
+	                	 var num = clickedRow.num;
+	                	 
+	                	 console.log(clickedRow);
+	                	 console.log(num);
+	                	 
+	                	 $.ajax({
+	                		 url:"/board/selectOne/" +num,
+	         	        	method:"get",
+	         	        	dataType : "json",
+	         	        	success: function(rslt){
+	         	        		
+	         	        	},
+	         	        	error: function(xhr, status, error) {
+	        	        	    console.log("code: " + xhr.status);
+	        	        	    console.log("message: " + xhr.responseText);
+	        	        	    console.log("error: " + error);
+	        	        	}
+	                	 })
+	                 }) */
 	        	},
 	        	error: function(xhr, status, error) {
 	        	    console.log("code: " + xhr.status);
@@ -124,6 +207,10 @@
 	        	    console.log("error: " + error);
 	        	}
 	        });
+	        
+	    }
+	    function fTitle(data){
+	    	console.log('제목', data);
 	    }
 	    
 	    /* function ajaxBtn() {

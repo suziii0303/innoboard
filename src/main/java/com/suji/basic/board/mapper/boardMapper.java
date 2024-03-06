@@ -10,5 +10,6 @@ import com.suji.basic.board.vo.boardVO;
 public interface boardMapper {
 	
 	List<boardVO> selectAll();
+	boardVO selectOne(boardVO num);
 
 }

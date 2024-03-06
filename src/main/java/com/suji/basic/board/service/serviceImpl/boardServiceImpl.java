@@ -21,4 +21,11 @@ public class boardServiceImpl implements boardService{
 		return boardMapper.selectAll();
 	}
 
+	@Override
+	public boardVO selectOne(boardVO num) {
+		return boardMapper.selectOne(num);
+	}
+
+
+
 }
