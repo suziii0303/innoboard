@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+
+	
+	 <!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:mysql:thin:@inno-t.shop:46521/DEV_NSIS" />
+        <property name="username" value="DEVNSIS"/>
+        <property name="password" value="DEVNSIS123"/>
+    </bean> -->
+
+
+	
+	<!-- 트랜잭션 관리자의 빈을 정의 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="datasource"></property>
+	</bean>	
+	
+	<!-- 애너테이션 기반의 트랜잭션 제어를 활성화 함 -->
+	<tx:annotation-driven/>
+	
+
+	<mybatis-spring:scan base-package="com.suji.basic.board.mapper"/>
+</beans>
