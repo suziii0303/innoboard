@@ -9,4 +9,5 @@ public interface boardService {
 	public List<boardVO> selectAll();
 	public boardVO selectOne(boardVO num);
 	public int delete(boardVO num);
+	public int update(boardVO vo);
 }

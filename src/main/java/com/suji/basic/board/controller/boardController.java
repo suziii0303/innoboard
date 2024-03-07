@@ -78,7 +78,9 @@ public class boardController {
 	}
 	
 	@PostMapping("/updateBoard")
-	public String updateBoard () {
+	public String updateBoard(boardVO boardvo) {
+		System.out.println(boardvo);
+		boardService.update(boardvo);
 		return "redirect:/board/main";
 	}
 

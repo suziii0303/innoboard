@@ -31,6 +31,11 @@ public class boardServiceImpl implements boardService{
 		return boardMapper.delete(num);
 	}
 
+	@Override
+	public int update(boardVO vo) {
+		return boardMapper.update(vo);
+	}
+
 
 
 }
