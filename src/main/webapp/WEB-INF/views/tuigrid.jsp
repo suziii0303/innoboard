@@ -42,7 +42,6 @@
       </div>
     </div>
   </section>
-  <div id="s__footer"></div>
   <script src="/resources/js/jquery-1.9.1.js"></script>
   <script src="/resources/js/tui-pagination.js"></script>
   <script src="/resources/js/tui-grid.js"></script>

@@ -1,6 +1,7 @@
 package com.suji.basic.board.vo;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +18,6 @@ public class boardVO {
     private Date cdate; 
     private String strdate; 
     private int hit;
-	
+	private List<String> voList; 
+	private String state;
 }

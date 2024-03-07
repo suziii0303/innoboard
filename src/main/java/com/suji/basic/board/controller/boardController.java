@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,6 +52,34 @@ public class boardController {
 		mav.addObject("vo",vo);
 		mav.setViewName("/detail");
 		return mav;
+	}
+	@ResponseBody
+	@PostMapping("/delete")
+	public int delete(@RequestBody boardVO voList) {
+		System.out.println("-----"+ voList);
+		List<String> Arr = voList.getVoList();
+		boardVO vo = new boardVO();
+		for (String list : Arr) {
+			System.out.println(list);
+			vo.setNum(Integer.parseInt(list));
+		}
+		return boardService.delete(vo);
+		
+	}
+	
+	@GetMapping("/updateForm/{num}")
+	public String updateForm(@PathVariable("num") String num, Model model) {
+		System.out.println("num" +num);
+		boardVO  vo = new boardVO();
+		vo.setNum(Integer.parseInt(num));
+		boardVO updateId = boardService.selectOne(vo);
+		model.addAttribute("vo",updateId);
+		return "update";
+	}
+	
+	@PostMapping("/updateBoard")
+	public String updateBoard () {
+		return "redirect:/board/main";
 	}
 
 }

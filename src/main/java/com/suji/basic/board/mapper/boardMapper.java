@@ -11,5 +11,6 @@ public interface boardMapper {
 	
 	List<boardVO> selectAll();
 	boardVO selectOne(boardVO num);
+	int delete(boardVO num);
 
 }

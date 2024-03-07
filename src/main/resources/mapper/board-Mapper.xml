@@ -2,10 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.suji.basic.board.mapper.boardMapper">
 	<select id="selectAll" resultType="boardVO">
-		SELECT num, title, writer, DATE_FORMAT(cdate,'%Y-%m-%d')as strdate, hit FROM tb_board
+		SELECT 
+			num
+			, title
+			, writer
+			, DATE_FORMAT(cdate,'%Y-%m-%d')as strdate
+			, hit, state
+		FROM tb_board 
+		WHERE state = 'Y'
 	</select>
 	
 	<select id="selectOne" resultType="boardVO" parameterType="boardVO">
-		SELECT num, title, writer, content, DATE_FORMAT(cdate,'%Y-%m-%d')as strdate, hit FROM tb_board WHERE num =#{num}
+		SELECT 
+			num
+			, title
+			, writer
+			, content
+			, DATE_FORMAT(cdate,'%Y-%m-%d')as strdate
+			, hit 
+		FROM tb_board 
+		WHERE num =#{num} AND state='Y'
 	</select>
+	
+	<update id="delete" parameterType="int">
+		UPDATE tb_board 
+		SET state = 'N'
+		WHERE num = #{num} 
+	</update>
+	
+	<update id="update" parameterType="boardVO">
+		UPDATE tb_board
+		SET 
+			title
+			,content
+		WHERE num = #{num}
+	</update>
 </mapper>

@@ -26,6 +26,11 @@ public class boardServiceImpl implements boardService{
 		return boardMapper.selectOne(num);
 	}
 
+	@Override
+	public int delete(boardVO num) {
+		return boardMapper.delete(num);
+	}
+
 
 
 }
