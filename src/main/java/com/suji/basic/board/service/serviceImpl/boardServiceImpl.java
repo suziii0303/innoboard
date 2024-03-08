@@ -36,6 +36,11 @@ public class boardServiceImpl implements boardService{
 		return boardMapper.update(vo);
 	}
 
+	@Override
+	public int insert(boardVO vo) {
+		return boardMapper.insert(vo);
+	}
+
 
 
 }

@@ -11,6 +11,7 @@
 </head>
 <body>
 	<div>
+		
 		<p id="boardId">${vo.num}</p>
 		<p>${vo.title}</p>
 		<p>${vo.writer}</p>
@@ -26,7 +27,7 @@
 	<script>
 		function update(){
 			const num = document.querySelector("#boardId").innerText;
-			location.href = "/board/updateForm/"+num;
+			location.href = "/board/updateForm?num=" + num;
 		}
 		
 	    const deleteBtn = document.getElementById('deleteButton');

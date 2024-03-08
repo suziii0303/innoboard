@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.suji.basic.board.service.boardService;
 import com.suji.basic.board.vo.boardVO;
+import com.sun.javafx.collections.MappingChange.Map;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,22 +67,44 @@ public class boardController {
 		return boardService.delete(vo);
 		
 	}
+	/*
+	 * @GetMapping("/updateFormview") public String updateFormview() { return
+	 * "update"; }
+	 */
 	
-	@GetMapping("/updateForm/{num}")
-	public String updateForm(@PathVariable("num") String num, Model model) {
-		System.out.println("num" +num);
-		boardVO  vo = new boardVO();
-		vo.setNum(Integer.parseInt(num));
-		boardVO updateId = boardService.selectOne(vo);
-		model.addAttribute("vo",updateId);
+	@GetMapping("/updateForm")
+	public String updateForm(@RequestParam(name="num", required = false)String num, Model model) {
+		if (num == null) {
+		}else if(num != null) {
+			boardVO  vo = new boardVO();
+			vo.setNum(Integer.parseInt(num));
+			boardVO updateId = boardService.selectOne(vo);
+			model.addAttribute("vo",updateId);
+		}
 		return "update";
 	}
 	
 	@PostMapping("/updateBoard")
-	public String updateBoard(boardVO boardvo) {
-		System.out.println(boardvo);
-		boardService.update(boardvo);
-		return "redirect:/board/main";
+	@ResponseBody
+	public int updateBoard(@RequestBody boardVO boardVO) {
+		System.out.println(boardVO.toString());
+		int num = boardVO.getNum();
+		
+		if(num >0) {
+			return boardService.update(boardVO);
+		}else {
+		 	return boardService.insert(boardVO);
+		}
+		
 	}
+	/*
+	 * @PostMapping("/updateBoard") public String
+	 * updateBoard(@RequestParam(name="num", required = false)String num, boardVO
+	 * boardvo) { System.out.println(boardvo); System.out.println(num); if(num !=
+	 * null) { boardService.update(boardvo); }else { boardService.insert(boardvo); }
+	 * return "redirect:/board/main"; }
+	 */
+	
+	
 
 }
