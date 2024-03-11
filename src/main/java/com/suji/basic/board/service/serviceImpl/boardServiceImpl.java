@@ -1,6 +1,7 @@
 package com.suji.basic.board.service.serviceImpl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,9 @@ public class boardServiceImpl implements boardService{
 	private boardMapper boardMapper;
 	
 	@Override
-	public List<boardVO> selectAll() {
+	public List<boardVO> selectAll(String keyword) {
 		
-		return boardMapper.selectAll();
+		return boardMapper.selectAll(keyword);
 	}
 
 	@Override
@@ -27,7 +28,7 @@ public class boardServiceImpl implements boardService{
 	}
 
 	@Override
-	public int delete(boardVO num) {
+	public int delete(int num) {
 		return boardMapper.delete(num);
 	}
 

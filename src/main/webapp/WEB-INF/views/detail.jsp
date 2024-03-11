@@ -36,8 +36,7 @@
     		console.log("boardId",boardId);
     		let a = [];
     		a.push(boardId);
-	        let data = {voList : a};
-	        console.log("qoduff" , data)
+	        console.log(a)
 	        // ajax 만들기
 	 	    var v_ajax = new XMLHttpRequest();
 	        //v_ajax.open("메소드","주소" ,비동기여부);
@@ -54,7 +53,7 @@
 	             // 값 나오면 여기서 작업
 	           }
 	        }
-	        v_ajax.send(JSON.stringify({voList:a}));
+	        v_ajax.send(JSON.stringify(a));
 	    });
 
 	</script>

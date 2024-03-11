@@ -26,7 +26,8 @@
 						<form>
 							<div class="border-search01">
 								<input type="text" name="searchKeyword" />
-								<button class="btn-main">검색</button>
+								<button class="btn-main" type="button" id="searchBtn">검색</button>
+								<button class="btn-main" type="button" id="delBtn">삭제</button>
 								<button type="button" class="btn-main"
 									onclick="location.href='/board/updateForm'">글쓰기</button>
 								<!-- <button type="button" class="btn-main" onclick="ajaxBtn()">Ajax</button> -->
@@ -67,11 +68,216 @@
        alert('버튼 클릭');
    }; */
    window.onload=function(){
-      boardList();
+	   
+	  new Promise(function(resolve, reject) { 
+	       $.ajax({
+	           url:"/board/all",
+	           method:"get",
+	           dataType : "json",
+	           success: function(rslt){
+	              const grid = new tui.Grid({
+	                    el: document.getElementById("grid"),
+	                    data: rslt,//여기에 api 넣는것임  url
+	                    scrollX: true,
+	                    scrollY: false,
+	                    minBodyHeight: 30,
+	                     rowHeaders: [{
+	                      type: 'rowNum',
+	                      header: "번호",
+	                      width: 80,
+	                   /*    rowKey : "num",
+	                     formatter: function(params) {
+	                            return params.value.num;
+	                      }  */
+ 	                    }], 
+	                    pageOptions: {
+	                      useClient: true,
+	                      perPage: 10,
+	                    },
+	                    header: {
+	                      height: 57
+	                    },
+	                    minRowHeight: 71,
+	                    columns: [
+	                       {
+	                           type: 'checkbox',
+	                           align: 'center',
+	                           header: "체크",
+	                           width: 80,
+	                           formatter:function(data){
+	                              let html = '<input class="seq" type="checkbox" value='+data.row.num+'>'
+	                              
+	                              return html
+	                           }
+	                         }, 
+	                      {
+	                        header: '제목',
+	                        name: 'title',
+	                        align: 'center',
+	                        formatter:function(data){
+	                           let html = '<span class="titleNum" data-num="' + data.row.num + '">' + data.row.title + '</span>';
+	                           return html;
+	                        }
+	                      },
+	                      {
+	                        header: '작성자',
+	                        name: 'writer',
+	                        align: 'center',
+	                        width: 200,
+	                      },
+	                      {
+	                        header: '등록일',
+	                        name: 'strdate',
+	                        align: 'center',
+	                        width: 200,
+	                      },
+	                      {
+	                        header: '조회',
+	                        name: 'hit',
+	                        align: 'center',
+	                        width: 200,
+	                      }
+	                    ],
+	                  });
+	              
+	                 // 체크박스의 id 값을 가져와서 배열에 넣어주기
+	                 let delBtn = document.querySelector("#delBtn");
+	                 let values = [];
+	                 
+
+                     delBtn.addEventListener("click",function(){
+		                 let checkboxes = document.querySelectorAll('.seq');
+		                 let checkboxArray = Array.from(checkboxes);    
+                    	 
+		                 checkboxArray.forEach(checkbox => {
+	                	 	if(checkbox.checked){
+	                	 		values.push(checkbox.value);
+	                	 	}
+	    	             });
+	                	 	console.log(values)
+// 							let data = {
+// 	                	 		"num": values
+// 	                	 	}
+		                  $.ajax({
+		                	 url :"/board/delete", 
+		                	 type : "POST",
+		                	 data : {
+		                		 delNum:values
+		                	 },
+		                	 success : function(rslt){
+		                		 console.log(rslt);
+		                		 if(rslt == 1 ){
+		                			 location.href ="/board/main";
+		                		 }
+		                	 }
+		                	 
+		                 })
+	    	                 
+	                  });	                 
+	                 
+	                 // 제목에 데이터를 가져와서 id 값 가져오기 
+	                 let titleNum = document.querySelectorAll('.titleNum[data-num]');
+	                 let titleNumArray = Array.from(titleNum);
+	                 
+	                 grid.on('click',(ev) => {
+	                 	if(ev.columnName == 'title') {
+	                 		let num = grid.getValue(ev.rowKey, "num");
+	                 		location.href= "/board/selectOne/"+num;
+	                 	}
+	                 });
+	                 
+	                 
+	     			resolve(grid);
+	                 
+	                 /* $(".titleNum").on("click",function(){
+	                 	console.log("에헤헤")
+	                 }) */
+	                 
+	                /*  for(let i=0; i<titleNumArray.length; i++){
+	                 	let dataNumValue = titleNumArray[i].getAttribute("data-num");
+	                 	titleNumArray[i].addEventListener("click",function(){
+	                         location.href = "/board/selectOne/"+dataNumValue
+	                      });
+	                 }
+	                  */
+	                 /* titleNum.forEach(element => {
+	                     let dataNumValue = element.getAttribute('data-num');
+	                  
+	                  element.addEventListener("click",function(){
+	                     location.href = "/board/selectOne/"+dataNumValue
+	                  });
+	                 }); */
+	                 
+	                 
+	                 
+	              /*    checkboxArray.forEach(checkbox => {
+	                     const value = checkbox.value;
+	                     console.log(value);
+	                 }); */
+	              
+	              
+	               /* grid.on('check', function(ev) {
+	                     var checkedRows = grid.getCheckedRows();
+	                     var nums = checkedRows.map(row => row.num);
+	                     console.log(checkedRows);
+	                     console.log(nums);
+	               });
+	                 grid.on("click", function (ev) {
+	                    var focusedCell = grid.getFocusedCell();
+	                    var clickedRow = grid.getRow(focusedCell.rowKey);
+	                    
+	                    console.log('aa'+focusedCell);
+	                    
+	                    var num = clickedRow.num;
+	                    
+	                    console.log(clickedRow);
+	                    console.log(num);
+	                    
+	                    $.ajax({
+	                       url:"/board/selectOne/" +num,
+	                       method:"get",
+	                       dataType : "json",
+	                       success: function(rslt){
+	                          
+	                       },
+	                       error: function(xhr, status, error) {
+	                          console.log("code: " + xhr.status);
+	                          console.log("message: " + xhr.responseText);
+	                          console.log("error: " + error);
+	                      }
+	                    })
+	                 }) */
+	           },
+	           error: function(xhr, status, error) {
+	               console.log("code: " + xhr.status);
+	               console.log("message: " + xhr.responseText);
+	               console.log("error: " + error);
+	           }
+	        });
+	  }).then((val)=>{
+		  console.log(val);
+		   let searchBtn = document.querySelector("#searchBtn");
+		   let grid = val;
+		   
+		   searchBtn.addEventListener("click",function(){
+			    let keyword = document.querySelector("input[name='searchKeyword']").value;
+			    alert('안녕 ' + keyword);
+			    $.ajax({
+			          url:"/board/all",
+			          method:"get",
+			          dataType : "json",
+			          data : {keyword : keyword},
+			          success: function(rslt){
+			        	  grid.resetData(rslt);
+
+			          }
+			    })
+		   })
+	  });
    }
-   
-   function boardList() {
-       $.ajax({
+ 
+/*    function boardList() {
+ *//*        $.ajax({
           url:"/board/all",
           method:"get",
           dataType : "json",
@@ -90,7 +296,7 @@
                     formatter: function(params) {
                            return params.value.num;
                      }  */
-                   }], 
+/*                    }], 
                    pageOptions: {
                      useClient: true,
                      perPage: 10,
@@ -139,20 +345,20 @@
                        width: 200,
                      }
                    ],
-                 });
+                 }); */
                 // 체크박스의 id 값을 가져와서 배열에 넣어주기
-                let checkboxes = document.querySelectorAll('.seq');
+/*                 let checkboxes = document.querySelectorAll('.seq');
                 let checkboxArray = Array.from(checkboxes);
                 let values = [];
                 
                 checkboxes.forEach(checkbox => {
                     let value = checkbox.value;
                     values.push(value);
-                });
+                }); */
                 
                 
                 // 제목에 데이터를 가져와서 id 값 가져오기 
-                let titleNum = document.querySelectorAll('.titleNum[data-num]');
+/*                 let titleNum = document.querySelectorAll('.titleNum[data-num]');
                 let titleNumArray = Array.from(titleNum);
                 
                 grid.on('click',(ev) => {
@@ -160,7 +366,8 @@
                 		let num = grid.getValue(ev.rowKey, "num");
                 		location.href= "/board/selectOne/"+num;
                 	}
-                });
+                }); */
+                
                 
                 /* $(".titleNum").on("click",function(){
                 	console.log("에헤헤")
@@ -220,16 +427,17 @@
                      }
                    })
                 }) */
+/*                 return grid;
           },
           error: function(xhr, status, error) {
               console.log("code: " + xhr.status);
               console.log("message: " + xhr.responseText);
               console.log("error: " + error);
           }
-       });
+       }); */
        
-   }
-
+/*    }
+ */   
    
    /* function ajaxBtn() {
        alert('버튼 클릭');

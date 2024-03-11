@@ -18,6 +18,8 @@ public class boardVO {
     private Date cdate; 
     private String strdate; 
     private int hit;
+    private String state;
+    private String keyword;
+    
 	private List<String> voList; 
-	private String state;
 }

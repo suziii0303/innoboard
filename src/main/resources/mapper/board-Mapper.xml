@@ -2,17 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.suji.basic.board.mapper.boardMapper">
 	<!-- 전체 게시글 조회 -->
-	<select id="selectAll" resultType="boardVO">
+	<select id="selectAll" resultType="boardVO" parameterType="String">
 		SELECT 
-			num
-			, title
-			, writer
-			, DATE_FORMAT(cdate,'%Y-%m-%d')as strdate
-			, hit, state
-		FROM tb_board 
-		WHERE state = 'Y'
+		    num,
+		    title,
+		    writer,
+		    DATE_FORMAT(cdate,'%Y-%m-%d') AS strdate,
+		    hit,
+		    state
+		FROM 
+		    tb_board
+		<if test="keyWord != null and keyword !=''">
+		WHERE 
+		    TITLE LIKE CONCAT('%', #{keyword}, '%') AND state = 'Y'
+		</if>
+		<if test="keyWord == null or keyword == ''">
+		WHERE 
+		    state = 'Y'
+		</if>
 		ORDER BY 
-    	num DESC
+		    num DESC
 	</select>
 	<!-- 게시글 한개 조회 -->
 	<select id="selectOne" resultType="boardVO" parameterType="boardVO">

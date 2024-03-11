@@ -1,7 +1,9 @@
 package com.suji.basic.board.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.suji.basic.board.service.boardService;
 import com.suji.basic.board.vo.boardVO;
-import com.sun.javafx.collections.MappingChange.Map;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,9 +36,9 @@ public class boardController {
 	
 	@ResponseBody
 	@GetMapping("/all")
-	public List<boardVO> selectAll(){
-		System.out.println("오냐");
-		List<boardVO> vo = boardService.selectAll();
+	public List<boardVO> selectAll(@RequestParam(required = false) String keyword){
+		System.out.println("오냐"+keyword);
+		List<boardVO> vo = boardService.selectAll(keyword);
 		log.info("나왕{}",vo);
 		//mav.addObject("vo",vo);
 		//mav.setViewName("/tuigrid");
@@ -56,15 +57,31 @@ public class boardController {
 	}
 	@ResponseBody
 	@PostMapping("/delete")
-	public int delete(@RequestBody boardVO voList) {
-		System.out.println("-----"+ voList);
-		List<String> Arr = voList.getVoList();
-		boardVO vo = new boardVO();
-		for (String list : Arr) {
-			System.out.println(list);
-			vo.setNum(Integer.parseInt(list));
+	public int delete(@RequestBody List<String> delnum) {
+		System.out.println("-----"+ delnum);
+		int cnt = 0;
+		int num = 0;
+		if(delnum.size() > 1) {
+			for(int i=0; i<delnum.size(); i++) {
+				num = Integer.parseInt(delnum.get(i));
+				cnt = boardService.delete(num);
+			}
+		}else if (delnum.size() == 1){
+			 num = Integer.parseInt(delnum.get(0));
+			 System.out.println(num);
+			 boardService.delete(num);
+			 cnt=+1;
+			 
+			 
 		}
-		return boardService.delete(vo);
+		//List<String> Arr = voList.getVoList();
+//		boardVO vo = new boardVO();
+//		for (String list : Arr) {
+//			System.out.println(list);
+//			vo.setNum(Integer.parseInt(list));
+//		}
+//		return boardService.delete(vo);
+		return cnt;
 		
 	}
 	/*
